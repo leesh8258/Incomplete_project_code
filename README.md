@@ -30,23 +30,32 @@ __3. 개발언어__
 __4. 개발기간__
    + 2025.01 ~ 2025.05 (프로젝트 중단)
 
-## 담당 기능
-__1. 몬스터__
-   + AI, FSM
-   + Animation
-   + 적 탐지 및 길 찾기 로직
-   + 공격 패턴
-   + 스프라이트 관리
+## 담당 기능 및 관련 스크립트
++ 현재 설명하는 스크립트는 모두 Scripts 파일 기준입니다
 
-__2. 스탯__
-   + 플레이어
-   + 몬스터
-   + 블럭
+### 1. 몬스터
+| 기능        | 설명                         | 관련 스크립트 경로 및 파일명 |
+|-------------|------------------------------|-------------------------------|
+| 몬스터 AI   | FSM 기반의 적 캐릭터 AI 구현 | `HealthEntity/HealthyEntity.cs`<br>`HealthEntity/Character.cs`<br>`HealthEntity/Enemy.cs`<br>`HealthEntity/Enemies/Enemy_0_000.cs ~ Enemy_0_006.cs` |
+| 몬스터 애니메이션 | Animator를 활용한 몬스터 행동 애니메이션 구현 및 몬스터 State에 따른 애니메이션 재생| `HealthEntity/Enemies/State` |
+| 적 탐지 및 길 찾기 | Collider 감지를 통한 적 탐지 및 A* 알고리즘을 활용한 네비게이션 기능 | `HealthEntity/Enemies/Detect`<br>`Navigation/AStarPathfinder.cs`<br>`HealthEntity/Enemies/Move` |
+| 몬스터 공격 | 몬스터 패턴에 따라 다양한 공격이 나올 수 있도록 기능 구현 | `Attack` |
+| 스프라이트 | 몬스터가 바라보는 방향 및 공격방향에 따라 스프라이트 관리 | `HealthEntity/Sprite/SpriteManager.cs` |
+| 버프 관리 | 몬스터 버프, 디버프 기능 구현 | `HealthEntity/Buff` |
+| 스포너 | 몬스터 소환 조건을 설정할 수 있는 스포너 기능 구현 | `HealthEntity/Enemies/Spawner` |
+<br>
 
-__3. 유틸리티__
-   + PriorityQueue
-   + CSV Parser
-   + SO 변환기
+### 2. 스탯
+| 기능      | 설명                                          | 관련 스크립트 경로 및 파일명 |
+|-----------|-----------------------------------------------|-------------------------------|
+|공용 스탯 | 몬스터, 블럭, 플레이어 공통으로 사용가능한 스탯 변수 | `HealthEntity/Stat` |
+<br>
 
-## 기능 설명
+### 3. 유틸리티
+| 기능      | 설명                                          | 관련 스크립트 경로 및 파일명 |
+|-----------|-----------------------------------------------|-------------------------------|
+|PriorityQueue | 적 탐지 중 우선순위가 높은 적을 탐지하기 위한 유틸리티 함수 작성 | `Utilities/PriorityQueue.cs` |
+|CSV Parser | CSV 파일 내용을 Unity 내 SO로 변환하여 매핑하기 위한 파서 | `Utilities/CsvParser.cs` |
+<br>
+
 ## 리팩토링 코드 비교
