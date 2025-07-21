@@ -9,13 +9,11 @@
 ___
 
 ## 프로젝트 소개
-<div algin="center">
-  <img width="32%" src="https://github.com/user-attachments/assets/ce6e07d4-6cf9-402a-b201-9db5b7ca214c">
-  <img width="32%" src="https://github.com/user-attachments/assets/e54d9ff6-c614-4ddb-b820-1968d88a89d9">
-  <img width="32%" src="https://github.com/user-attachments/assets/21a6f54a-ddea-42a8-9957-0083ffc4f0f4">
-  <div align="center">
-    <p><개발 중 이미지></p>
-  </div>
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/ce6e07d4-6cf9-402a-b201-9db5b7ca214c" width="40%">
+  <img src="https://github.com/user-attachments/assets/21a6f54a-ddea-42a8-9957-0083ffc4f0f4" width="40%">
+  <img src="https://github.com/user-attachments/assets/e54d9ff6-c614-4ddb-b820-1968d88a89d9" width="40%">
+  <p>인 게임 개발 이미지</p>
 </div>
 
 __1. 장르__
