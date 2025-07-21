@@ -58,4 +58,82 @@ __4. 개발기간__
 |CSV Parser | CSV 파일 내용을 Unity 내 SO로 변환하여 매핑하기 위한 파서 | `Utilities/CsvParser.cs` |
 <br>
 
-## 리팩토링 코드 비교
+## 리팩토링
+
+### 1. 공격
+<details><summary>리팩토링 전 공격 구조</summary>
+  <pre>
+
+  AttackBase (abstract MonoBehaviour)
+  ├── MeleeAttackBase
+  │   ├── MeleeFanAttack
+  │   ├── MeleeRushAttack
+  │   └── MeleeStraightAttack
+  └── RangeAttackBase
+      ├── RangeSingleShotAttack
+      └── RangeHitscanShotAttack
+  
+  BulletBase (abstract MonoBehaviour)
+  └── NormalBullet
+  
+  [공격 흐름]
+  Enemy
+  └─ AttackSequence()
+      ├─ Wait (BeforeAnim)
+      ├─ PerformAttack()
+      └─ Wait (AfterAnim)
+    
+  </pre>
+</details>
+
+<details><summary>리팩토링 후 공격 구조</summary>
+  <pre>
+    
+  EnemyAttackController (MonoBehaviour)
+  ├── List<IAttackHandler>
+  │   ├── DashAttack         ← MeleeAttackBase_NEW
+  │   ├── AreaAttack         ← MeleeAttackBase_NEW
+  │   └── StraightAttack     ← MeleeAttackBase_NEW
+  ├── ShootToTarget          ← ProjectileHandler
+  └── ...
+  
+  ProjectileBase (abstract MonoBehaviour)
+  └── LaserProjectile
+  
+  AttackDataSO (ScriptableObject)
+  ├── attackCoefficient
+  ├── attackRange
+  ├── hitTiming / totalDelay
+  └── projectilePrefab, bulletCount, ...
+  
+  [공격 흐름]
+  EnemyAttackController
+  └─ Animator.SetTrigger("Attack")
+      ├─ Wait (hitTiming)
+      ├─ IAttackHandler.Execute()
+      └─ Wait (delay - hitTiming)
+    
+  </pre>
+</details>
+
+#### 주요 리팩토링 요약
+
++ Interface 기반 공격 실행 분리
++ 공격데이터 SO화
++ 발사체 동작 책임 분리
++ AttackController 로직 최적화
+
+#### 코드 변경 표
+| 변경점        | 이유                         | 개선사항                    |
+|-------------|------------------------------|------------------------------|
+| `IAttackHandler` 인터페이스 도입 | 기존에는 AttackBase를 근접/원거리 공격으로 상속하여 구분했기 때문에, 공격 로직이 중복되거나 커스터마이징이 어려웠음 | 1. 근접/원거리 구분 없이 IAttackHandler만 구현하면 자유롭게 커스터마이징 가능<br>2. 공격 로직을 실행 단위로 분리하여 기능 확장 및 유지보수가 쉬워짐 |
+| `AttackDataSO`(ScriptableObject) 도입 | 기존에는 공격 계수 등 수치를 코드 내에서 직접 수정해야 했기 때문에, 기획자가 직접 밸런스를 조정하기 어려운 구조였음 | 1. 공격 데이터를 외부화하여 기획자와의 협업 효율이 대폭 향상됨<br>2. 공격 밸런스 조정 시 SO 파일만 수정하면 되므로 유지보수와 테스트가 쉬워짐 |
+| 발사체 생성/동작 책임 분리| 기존에는 발사체 생성과 방향 설정, 공격 적용까지 모두 하나의 스크립트에서 처리되어 코드 중복과 결합도가 높음 | 1. ProjectileHandler가 발사체 생성 및 방향 설정을 담당하고, ProjectileBase가 실제 동작을 처리하여 책임을 명확히 분리<br>2. 구조가 유연해져 유도탄, 폭발탄, 레이저 등 다양한 발사체 확장이 쉬워짐 |
+
+---
+### 2. 버프
+<details><summary>리팩토링 전 버프 구조</summary>
+</details>
+
+<details><summary>리팩토링 전 공격 구조</summary>
+</details>
