@@ -67,31 +67,7 @@ __4. 개발기간__
 
 <details><summary>리팩토링 후 공격 구조</summary>
   <pre>
-    
-  EnemyAttackController (MonoBehaviour)
-  ├── List<IAttackHandler>
-  │   ├── DashAttack         ← MeleeAttackBase_NEW
-  │   ├── AreaAttack         ← MeleeAttackBase_NEW
-  │   └── StraightAttack     ← MeleeAttackBase_NEW
-  ├── ShootToTarget          ← ProjectileHandler
-  └── ...
-  
-  ProjectileBase (abstract MonoBehaviour)
-  └── LaserProjectile
-  
-  AttackDataSO (ScriptableObject)
-  ├── attackCoefficient
-  ├── attackRange
-  ├── hitTiming / totalDelay
-  └── projectilePrefab, bulletCount, ...
-  
-  [공격 흐름]
-  EnemyAttackController
-  └─ Animator.SetTrigger("Attack")
-      ├─ Wait (hitTiming)
-      ├─ IAttackHandler.Execute()
-      └─ Wait (delay - hitTiming)
-    
+    <img width="80%" src="https://github.com/user-attachments/assets/d34a353b-aede-4cbf-a545-1b71559f7246">
   </pre>
 </details>
 
@@ -105,14 +81,37 @@ __4. 개발기간__
 #### 코드 변경 표
 | 변경점        | 이유                         | 개선사항                    |
 |-------------|------------------------------|------------------------------|
-| `IAttackHandler` 인터페이스 도입 | 기존에는 AttackBase를 근접/원거리 공격으로 상속하여 구분했기 때문에, 공격 로직이 중복되거나 커스터마이징이 어려웠음 | 1. 근접/원거리 구분 없이 IAttackHandler만 구현하면 자유롭게 커스터마이징 가능<br>2. 공격 로직을 실행 단위로 분리하여 기능 확장 및 유지보수가 쉬워짐 |
-| `AttackDataSO`(ScriptableObject) 도입 | 기존에는 공격 계수 등 수치를 코드 내에서 직접 수정해야 했기 때문에, 기획자가 직접 밸런스를 조정하기 어려운 구조였음 | 1. 공격 데이터를 외부화하여 기획자와의 협업 효율이 대폭 향상됨<br>2. 공격 밸런스 조정 시 SO 파일만 수정하면 되므로 유지보수와 테스트가 쉬워짐 |
-| 발사체 생성/동작 책임 분리| 기존에는 발사체 생성과 방향 설정, 공격 적용까지 모두 하나의 스크립트에서 처리되어 코드 중복과 결합도가 높음 | 1. ProjectileHandler가 발사체 생성 및 방향 설정을 담당하고, ProjectileBase가 실제 동작을 처리하여 책임을 명확히 분리<br>2. 구조가 유연해져 유도탄, 폭발탄, 레이저 등 다양한 발사체 확장이 쉬워짐 |
+| `IAttackHandler` 인터페이스 도입 | 기존에는 AttackBase를 상속하여 근접/원거리 공격을 구분했기 때문에, 공격 로직의 중복이 발생하고 커스터마이징이 어려운 구조였습니다. 이를 개선하기 위해 IAttackHandler 인터페이스를 도입하였습니다. | 1. 근접/원거리 구분 없이 IAttackHandler만 구현하면 다양한 공격 방식을 자유롭게 커스터마이징 가능<br>2. 공격 로직을 실행 단위로 분리하여 기능 확장 및 유지보수가 쉬워짐 |
+| `AttackDataSO`(ScriptableObject) 도입 | 공격 계수나 수치 등의 데이터를 코드 내에서 직접 수정해야 했기 때문에, 기획자가 공격 밸런스를 조정하기 어려운 구조였습니다. 이를 해결하기 위해 공격 데이터를 ScriptableObject로 외부화하였습니다. | 1. 공격 수치를 SO로 분리함으로써 기획자와의 협업 효율이 향상<br>2. 밸런스 조정 시 SO 파일만 수정하면 되므로 유지보수와 테스트가 간편해짐 |
+| 발사체 생성/동작 책임 분리| 이전에는 발사체 생성, 방향 설정, 공격 적용 등의 모든 과정을 하나의 스크립트에서 처리했기 때문에 코드 중복 및 결합도가 높았습니다. 이를 개선하여 역할을 명확히 분리하였습니다. | 1. ProjectileHandler가 발사체 생성 및 방향 설정을 담당하고, ProjectileBase가 발사체의 실제 동작을 처리<br>2. 구조가 유연해져 유도탄, 폭발탄, 레이저 등 다양한 발사체 확장이 쉬워짐 |
 
 ---
 ### 2. 버프
 <details><summary>리팩토링 전 버프 구조</summary>
+  <pre>
+    <img width="80%" src="https://github.com/user-attachments/assets/e79c40ee-2c2f-430f-9cd3-c6e4ffc796af" />
+  </pre>
+
 </details>
 
-<details><summary>리팩토링 전 공격 구조</summary>
+<details><summary>리팩토링 후 버프 구조</summary>
+  <pre>
+    <img width="80%" src="https://github.com/user-attachments/assets/1b81c318-71d4-49d3-bcdc-ae37a1c70974" />
+  </pre>
 </details>
+
+#### 주요 리팩토링 요약
+
++ 부족한 버프 기능 추가 (복합 버프, 버프 중첩 처리 기능)
++ 버프 데이터 SO화
++ 버프 스탯 매핑 자동화
++ 기능 분할 및 최적화
+
+#### 코드 변경 표
+| 변경점        | 이유                         | 개선사항                    |
+|----------------|------------------------------|------------------------------|
+| 버프 중첩 처리 방식 변경 | 기존에는 동일한 종류의 버프가 새로 들어오면 기존 버프를 무조건 취소하고 새로 덮어쓰는 방식이었습니다. 그러나 이러한 방식은 게임 플레이에 어울리지 않는다고 판단하여 아래와 같이 변경하였습니다. | 1. 동일한 종류의 버프가 기존에 존재할 경우, 두 버프 중 더 강한 효과만 적용되도록 개선하였습니다. |
+| 버프 데이터 SO(ScriptableObject)화 | 이전에는 버프 데이터를 Factory에서 직접 하드코딩해야 했기 때문에, 기획자가 버프 수치를 직접 조정하기 어려웠습니다. 이를 개선하기 위해 버프 데이터를 ScriptableObject로 분리하였습니다. | 1. 기획자가 직접 수치를 조정할 수 있어 협업 효율이 향상됨<br>2. 유지보수 및 테스트가 쉬워짐 |
+| 스탯 매핑 자동화 | 기존에는 Enemy 등의 코드에서 버프가 적용될 때, 스탯 값을 직접 조작하는 방식이었습니다. 이로 인해 버프가 해제되거나 중첩되는 상황에서 스탯 오류가 발생하는 문제가 있었습니다. | 1. 기본 스탯과 버프 스탯을 분리하여 계산함으로써, 스탯 충돌 문제를 예방<br>2. 버프/디버프에 따라 스탯이 변화할 경우, 스탯 데이터를 직접 수정하지 않고 자동 매핑이 이루어지도록 구조를 변경 |
+
+---
