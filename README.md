@@ -61,26 +61,7 @@ __4. 개발기간__
 ### 1. 공격
 <details><summary>리팩토링 전 공격 구조</summary>
   <pre>
-
-  AttackBase (abstract MonoBehaviour)
-  ├── MeleeAttackBase
-  │   ├── MeleeFanAttack
-  │   ├── MeleeRushAttack
-  │   └── MeleeStraightAttack
-  └── RangeAttackBase
-      ├── RangeSingleShotAttack
-      └── RangeHitscanShotAttack
-  
-  BulletBase (abstract MonoBehaviour)
-  └── NormalBullet
-  
-  [공격 흐름]
-  Enemy
-  └─ AttackSequence()
-      ├─ Wait (BeforeAnim)
-      ├─ PerformAttack()
-      └─ Wait (AfterAnim)
-    
+    <img width="80%" src="https://github.com/user-attachments/assets/b7089bae-7ab2-4e6d-9ce7-8427886735fb">
   </pre>
 </details>
 
